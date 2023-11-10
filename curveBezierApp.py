@@ -1,6 +1,8 @@
 import logging
+import time
 from tkinter import *
 import tkinter.font as font
+from time import perf_counter
 
 
 class CurveBezierApp:
@@ -71,8 +73,8 @@ class CurveBezierApp:
         return self.NewtonBinomialCoefficient(n, i) * (t ** i) * (1.0 - t) ** (n - i)
 
     def BezierCurvePoints(self):
-        n = len(self.points)-1  # stopien krzywej Beziera
-        k = int(self.kEntry.get())  # liczba segmentow
+        n = len(self.points)-1  # degree Bezier curve
+        k = int(self.kEntry.get())  # number of segments
 
         def p(t):
             x, y = 0, 0
@@ -163,7 +165,11 @@ class CurveBezierApp:
         self.drawBezierCurve()
 
     def numberOfSegmentsChanged(self, *args):
+        startMeasureTime = time.perf_counter()
         self.drawBezierCurve()
+        endMeasureTime = time.perf_counter()
+        logging.info(endMeasureTime-startMeasureTime)
+        print("Wykonalo sie")
 
     @staticmethod
     def validateEntry(P):
