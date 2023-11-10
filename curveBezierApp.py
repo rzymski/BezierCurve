@@ -1,6 +1,7 @@
+import logging
 from tkinter import *
 import tkinter.font as font
-# import re
+
 
 class CurveBezierApp:
     def __init__(self, root):
@@ -72,6 +73,7 @@ class CurveBezierApp:
     def BezierCurvePoints(self):
         n = len(self.points)-1  # stopien krzywej Beziera
         k = int(self.kEntry.get())  # liczba segmentow
+
         def p(t):
             x, y = 0, 0
             for i in range(n+1):
@@ -101,14 +103,11 @@ class CurveBezierApp:
 
     def movePointByMouse(self, event):
         if self.selectedPoint and any(self.selectedPoint == sub[2] for sub in self.points):
-            print(f"Wybrany punkt = {self.selectedPoint}")
-            print(f"Punkty = {self.points}")
             x, y = event.x, event.y
             self.drawSpace.coords(self.selectedPoint, x - self.offsetX, y - self.offsetY, x - self.offsetX + self.drawSpace.coords(self.selectedPoint)[2] - self.drawSpace.coords(self.selectedPoint)[0], y - self.offsetY + self.drawSpace.coords(self.selectedPoint)[3] - self.drawSpace.coords(self.selectedPoint)[1])
             point = self.getPointByPointIndexInCanvas(self.selectedPoint)
-            print(point)
             pointIndex = self.points.index(point)
-            print(pointIndex)
+            logging.info(f"Wybrany punkt = {self.selectedPoint} Punkty = {self.points} Punkt = {point} Index punktu w punktach = {pointIndex}")
             self.points[pointIndex][0], self.points[pointIndex][1] = x, y
             entryX, entryY = self.entries[pointIndex][0], self.entries[pointIndex][1]
             entryX.delete(0, END)
@@ -120,7 +119,6 @@ class CurveBezierApp:
         self.selectedPoint = None
 
     def drawOrMovePoint(self, event):
-        #print(f"Event = {event} x={event.x} y={event.y}")
         x, y = event.x, event.y
         shapes = self.drawSpace.find_overlapping(x, y, x, y)
         if shapes:
@@ -141,12 +139,12 @@ class CurveBezierApp:
         entryX = Entry(self.pointsLabel, justify=CENTER, width=12, textvariable=myVarX, validate="all", validatecommand=(self.vcmd, '%P'))
         myVarX.trace('w', lambda name, index, mode, var=myVarX, row=rowIndex, col=0: self.pointEntryChanged(row, col, var.get()))
         entryX.grid(row=rowIndex, column=0, sticky="ew")
-        entryX.insert(0, int(x))
+        entryX.insert(0, x)
         myVarY = StringVar()
         entryY = Entry(self.pointsLabel, justify=CENTER, width=12, textvariable=myVarY, validate="all", validatecommand=(self.vcmd, '%P'))
         myVarY.trace('w', lambda name, index, mode, var=myVarY, row=rowIndex, col=1: self.pointEntryChanged(row, col, var.get()))
         entryY.grid(row=rowIndex, column=1, sticky="ew")
-        entryY.insert(0, int(y))
+        entryY.insert(0, y)
         self.entries.append([entryX, entryY])
 
     def addPointByParameters(self, x, y):
@@ -155,20 +153,20 @@ class CurveBezierApp:
 
     def pointEntryChanged(self, row, column, value):
         if value:
-            print(f"Row={row} Column={column} Value={value}")
             self.points[row][column] = int(value)
-            print(self.points)
+            logging.info(f"Row={row} Column={column} Value={value} points = {self.points}")
             self.movePointByParameters(self.points[row][2], self.points[row][0], self.points[row][1])
 
     def movePointByParameters(self, itemIndex, newX, newY):
-        print(f"Parameters = {itemIndex} {newX} {newY}")
+        logging.info(f"Parameters = {itemIndex} {newX} {newY}")
         self.drawSpace.coords(itemIndex, newX - 5, newY - 5, newX + 5, newY + 5)
         self.drawBezierCurve()
 
     def numberOfSegmentsChanged(self, *args):
         self.drawBezierCurve()
 
-    def validateEntry(self, P):
+    @staticmethod
+    def validateEntry(P):
         if P == "" or (str.isdigit(P)):
             return True
         else:
