@@ -2,13 +2,13 @@ import logging
 import time
 from tkinter import *
 import tkinter.font as font
-from time import perf_counter
+from time import perf_counter as perfCounter
 
 
 class CurveBezierApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Image viewer Piotr Szumowski")
+        self.root.title("Bezier Curve Piotr Szumowski")
         bigFont = font.Font(size=12, weight="bold")
         self.screen_width = root.winfo_screenwidth()
         self.screen_height = root.winfo_screenheight()
@@ -165,9 +165,9 @@ class CurveBezierApp:
         self.drawBezierCurve()
 
     def numberOfSegmentsChanged(self, *args):
-        startMeasureTime = time.perf_counter()
+        startMeasureTime = perfCounter()
         self.drawBezierCurve()
-        endMeasureTime = time.perf_counter()
+        endMeasureTime = perfCounter()
         logging.info(endMeasureTime-startMeasureTime)
         print("Wykonalo sie")
 
