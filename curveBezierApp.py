@@ -19,7 +19,7 @@ class CurveBezierApp:
         self.entries = []
         self.points = []
         self.selectedPoint = None
-        self.offsetX, self.offsetY = 0, 0
+        # self.offsetX, self.offsetY = 0, 0
         self.newtonCache = {}
         # number of segments
         self.kLabel = Label(self.frame, text="Number of segments")
@@ -106,7 +106,7 @@ class CurveBezierApp:
     def movePointByMouse(self, event):
         if self.selectedPoint and any(self.selectedPoint == sub[2] for sub in self.points):
             x, y = event.x, event.y
-            self.drawSpace.coords(self.selectedPoint, x - self.offsetX, y - self.offsetY, x - self.offsetX + self.drawSpace.coords(self.selectedPoint)[2] - self.drawSpace.coords(self.selectedPoint)[0], y - self.offsetY + self.drawSpace.coords(self.selectedPoint)[3] - self.drawSpace.coords(self.selectedPoint)[1])
+            # self.drawSpace.coords(self.selectedPoint, x - self.offsetX, y - self.offsetY, x - self.offsetX + self.drawSpace.coords(self.selectedPoint)[2] - self.drawSpace.coords(self.selectedPoint)[0], y - self.offsetY + self.drawSpace.coords(self.selectedPoint)[3] - self.drawSpace.coords(self.selectedPoint)[1])
             point = self.getPointByPointIndexInCanvas(self.selectedPoint)
             pointIndex = self.points.index(point)
             logging.info(f"Wybrany punkt = {self.selectedPoint} Punkty = {self.points} Punkt = {point} Index punktu w punktach = {pointIndex}")
@@ -126,8 +126,8 @@ class CurveBezierApp:
         if shapes:
             # move point
             self.selectedPoint = shapes[-1]
-            self.offsetX = x - self.drawSpace.coords(self.selectedPoint)[0]
-            self.offsetY = y - self.drawSpace.coords(self.selectedPoint)[1]
+            # self.offsetX = x - self.drawSpace.coords(self.selectedPoint)[0]
+            # self.offsetY = y - self.drawSpace.coords(self.selectedPoint)[1]
         else:
             # draw  point
             point = self.drawSpace.create_rectangle(x - 5, y - 5, x + 5, y + 5, fill="black")
